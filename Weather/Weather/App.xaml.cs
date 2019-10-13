@@ -1,6 +1,7 @@
-﻿using System;
+﻿using System.Threading.Tasks;
+using Weather.Interfaces;
+using Weather.ViewModels.Base;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Weather
 {
@@ -9,13 +10,20 @@ namespace Weather
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
         }
 
-        protected override void OnStart()
+        private Task InitNavigation()
+        {
+            var navigationService = ViewModelLocator.Resolve<INavigationService>();
+            return navigationService.InitializeAsync();
+        }
+
+        protected override async void OnStart()
         {
             // Handle when your app starts
+            base.OnStart();
+
+            await InitNavigation();
         }
 
         protected override void OnSleep()
