@@ -13,6 +13,7 @@
         <Label HorizontalOptions="Center"
                Text="Welcome to Xamarin.Forms!"
                VerticalOptions="CenterAndExpand" />
+        <Button Text="Go to Child View" Command="{Binding GoToChildViewButtonClickedCommand}" />
     </StackLayout>
 
 </ContentPage>
