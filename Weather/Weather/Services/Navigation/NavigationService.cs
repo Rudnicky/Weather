@@ -83,15 +83,19 @@ namespace Weather.Services.Navigation
             await (page.BindingContext as ViewModelBase).InitializeAsync(parameter);
         }
 
-        private Type GetPageTypeForViewModel(Type viewModelType)
-        {
-            var viewName = viewModelType.FullName.Replace("Model", string.Empty);
-            var viewModelAssemblyName = viewModelType.GetTypeInfo().Assembly.FullName;
-            var viewAssemblyName = string.Format(CultureInfo.InvariantCulture, "{0}, {1}", viewName, viewModelAssemblyName);
-            var viewType = Type.GetType(viewAssemblyName);
-            return viewType;
-        }
-
+        /// <summary>
+        /// This method locates the view that corresponds to the specified
+        /// view model type, and creates and returns an instance of this view type.
+        /// Locating the view that corresponds to the view model type uses a convention-based
+        /// approach, which assumes that:
+        /// - views are in the same assembly as view model types,
+        /// - views are in a .Views child namespace.
+        /// - view models are in a .ViewModels child namespace.
+        /// - view names correspond to view model names, with 'Model' removed
+        /// </summary>
+        /// <param name="viewModelType"></param>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         private Page CreatePage(Type viewModelType, object parameter)
         {
             Type pageType = GetPageTypeForViewModel(viewModelType);
@@ -102,6 +106,15 @@ namespace Weather.Services.Navigation
 
             Page page = Activator.CreateInstance(pageType) as Page;
             return page;
+        }
+
+        private Type GetPageTypeForViewModel(Type viewModelType)
+        {
+            var viewName = viewModelType.FullName.Replace("Model", string.Empty);
+            var viewModelAssemblyName = viewModelType.GetTypeInfo().Assembly.FullName;
+            var viewAssemblyName = string.Format(CultureInfo.InvariantCulture, "{0}, {1}", viewName, viewModelAssemblyName);
+            var viewType = Type.GetType(viewAssemblyName);
+            return viewType;
         }
     }
 }
